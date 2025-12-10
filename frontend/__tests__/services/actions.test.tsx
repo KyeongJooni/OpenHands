@@ -1,22 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import ActionType from "#/types/action-type";
 import { ActionMessage } from "#/types/message";
+import { useCommandStore } from "#/state/command-store";
 
-// Mock the store and actions
 const mockDispatch = vi.fn();
 const mockAppendInput = vi.fn();
 
 vi.mock("#/store", () => ({
   default: {
     dispatch: mockDispatch,
-  },
-}));
-
-vi.mock("#/state/command-store", () => ({
-  useCommandStore: {
-    getState: () => ({
-      appendInput: mockAppendInput,
-    }),
   },
 }));
 
@@ -30,8 +22,10 @@ vi.mock("#/state/security-analyzer-slice", () => ({
 
 describe("handleActionMessage", () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     vi.clearAllMocks();
+    useCommandStore.setState({
+      appendInput: mockAppendInput,
+    });
   });
 
   it("should handle RUN actions by adding input to terminal", async () => {
